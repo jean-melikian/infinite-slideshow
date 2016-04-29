@@ -1,0 +1,79 @@
+body, div, img {
+	margin: 0px;
+	padding: 0px;
+}
+
+header h1, header h2 {
+	text-align: center;
+}
+
+/* ------------------- SLIDESHOW ------------------- */
+/* Couleur next et previous : #6BA3E8 */
+#slideshow {
+	margin: 0 auto;
+	overflow: hidden;
+}
+
+#slideshow .content {
+	position: relative;
+	display: inline-block;
+	margin: 0 auto;
+}
+
+#slideshow .slide {
+	display: inline-block;
+}
+
+div#wrap {
+    /*display: flex;*/
+    /*min-height: 100vh;*/
+	margin: 0 auto;
+    padding: 64px 0px;
+    box-shadow: inset 0px 0px 15px 0px #656565;
+}
+
+#slideshow {
+    position: relative;
+	display: inline-block;
+	vertical-align: middle;
+
+    z-index: 100;
+}
+
+.slide img {
+	position: relative;
+	clip: rect(0px, 200px, 100px, 0px);
+}
+
+div#previous, div#next {
+	display: inline-block;
+    vertical-align: middle;
+	width: 64px;
+	height: 64px;
+}
+
+div#previous:hover, div#next:hover, div#playpause:hover {
+	cursor: pointer;
+	transition: ease-in 250ms;
+	opacity: 1;
+}
+
+div#previous {
+	background-image: url('../img/previous.png');
+	opacity: 0.5;
+}
+
+div#next {
+	background-image: url('../img/next.png');
+	opacity: 0.5;
+}
+
+div#playpause {
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+
+	background: url('../img/play.png') no-repeat center;
+	opacity: 0.1;
+    z-index: 9999;
+}
