@@ -64,12 +64,12 @@ div#previous:hover, div#next:hover, div#playpause:hover {
 
 div#previous {
 	background-image: url('../img/previous.png');
-	opacity: 0.5;
+	opacity: 0.3;
 }
 
 div#next {
 	background-image: url('../img/next.png');
-	opacity: 0.5;
+	opacity: 0.3;
 }
 
 div#playpause {
