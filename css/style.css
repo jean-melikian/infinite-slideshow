@@ -1,3 +1,7 @@
+html {
+	font-family: 'Raleway', sans-serif;
+}
+
 body, div, img {
 	margin: 0px;
 	padding: 0px;
@@ -76,4 +80,17 @@ div#playpause {
 	background: url('../img/play.png') no-repeat center;
 	opacity: 0.1;
     z-index: 9999;
+}
+
+div.description {
+	height: 100%;
+}
+
+div.description p {
+	position: relative;
+	margin: 0;
+	padding: 0;
+	line-height: 100ch;
+	text-align: center;
+	vertical-align: bottom;
 }

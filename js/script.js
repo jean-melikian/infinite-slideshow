@@ -34,8 +34,9 @@ $(document).ready(function () {
 		var ListSlide = jQuery.parseJSON(msg);
 
 		$("#slideshow").html('<div class="content"></div>');
+		var slideIndex = 0;
 		for (key in ListSlide) {
-			$("#slideshow .content").append('<div class="slide"></div>');
+			$("#slideshow .content").append('<div class="slide" id="slideAtIndex'+ slideIndex++ +'"><div class="description"><p>'+ ListSlide[key].desc +'</p></div></div>');
 			$(".slide:eq("+ nbImg++ +")").css({"background": "url(" + ListSlide[key].src + ") center", "background-size": "cover", "height": imgHeight, "width": imgWidth});
 		}
 		$("#slideshow").append('<div id="playpause"></div>');
