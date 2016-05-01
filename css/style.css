@@ -6,14 +6,25 @@ html {
 body, div, img {
 	margin: 0px;
 	padding: 0px;
+	background-image: url('../img/patterns/retina_wood.png');
 }
 
 header h1, header h2 {
 	text-align: center;
+	color: #FFF;
 }
+
+a {
+	text-decoration: none;
+	color: #FFF;
+} a:hover {
+	transition: 250ms ease-in;
+	color: #6BA3E8;
+  }
 
 /* ------------------- SLIDESHOW ------------------- */
 /* Couleur next et previous : #6BA3E8 */
+
 #slideshow {
 	margin: 0 auto;
 	overflow: hidden;
@@ -27,14 +38,33 @@ header h1, header h2 {
 
 #slideshow .slide {
 	display: inline-block;
+	box-shadow: inset 0px 0px 20px 0px #656565;
 }
 
 div#wrap {
-    /*display: flex;*/
-    /*min-height: 100vh;*/
 	margin: 0 auto;
     padding: 0px 0px 70px 0px;
-    box-shadow: inset 0px 0px 15px 0px #656565;
+    box-shadow: 0px 0px 15px 0px #656565;
+
+}
+
+div#wrap, div.description {
+	background-image: url('../img/patterns/noise_lines.png');
+}
+
+div.description {
+	height: 70px;
+	margin: 0;
+	padding: 0;
+}
+
+div.description p {
+	line-height: 70px;
+	margin: 0;
+	padding: 0;
+	font-size: 26px;
+	text-align: center;
+	vertical-align: middle;
 }
 
 #slideshow {
@@ -60,7 +90,7 @@ div#previous, div#next {
 div#previous:hover, div#next:hover, div#playpause:hover {
 	cursor: pointer;
 	transition: ease-in 250ms;
-	opacity: 1;
+	opacity: 0.9;
 }
 
 div#previous {
@@ -83,20 +113,3 @@ div#playpause {
     z-index: 9999;
 }
 
-div.description {
-	height: 70px;
-	padding: 0;
-	margin: 0;
-}
-
-div.description p {
-	display: hidden;
-	font-size: 22px;
-
-	position: relative;
-	margin: 0;
-	padding: 0;
-	line-height: 74px;
-	text-align: center;
-	vertical-align: middle;
-}
