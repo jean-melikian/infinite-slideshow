@@ -85,7 +85,7 @@ div.bulletpoints img {
 	opacity: 0.2;
 } div.bulletpoints img:hover {
 	  transition: 250ms ease-in;
-	  opacity: 0.9;
+	  opacity: 0.75;
 	  cursor: pointer;
   }
 

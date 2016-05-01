@@ -27,8 +27,10 @@ $(document).ready(function () {
 	var intervalID;	// ID set by setInterval and used by clearInterval to manage delays between animations/translations
 	var currentSlide = 1; // Loops 0->n in order to display the matching description to the current slide, n being the number of slides
 	// ============================================================
-	
-	// == DATA FETCH ===============================================================================================================================
+
+	// =========================================================================================================================================
+	// ================================================================= DATA FETCH W/ AJAX ====================================================
+	// =========================================================================================================================================
 	// ajax() : asynchronous loading of remote resources (images for the slide + their descriptions)
 	// JSON data fetched :
 	// [
@@ -48,51 +50,64 @@ $(document).ready(function () {
 		$("#slideshow").html('<div class="content"></div>');
 		// Injects each of the resources fetched from above in HTML and CSS
 		for (key in ListSlide) {
+			// Appends each slide and bulletpoint DIVs in the .content DIV
 			$("#slideshow .content").append('<div class="slide" id="slideAtIndex'+ key +'"></div>');
-			$(".slide:eq("+ slideCount++ +")").css({"background": "url(" + ListSlide[key].src + ") center", "background-size": "cover", "height": slideHeight, "width": slideWidth});
 			$(".bulletpoints").append('<img src="'+ bulletpointImg +'" id="'+ key +'"/>');
+			// Injects CSS on each slide w/ the images as backgrounds, the background-size: cover here is important to crop the slide as we want
+			$(".slide:eq("+ slideCount++ +")").css({"background": "url(" + ListSlide[key].src + ") center", "background-size": "cover", "height": slideHeight, "width": slideWidth});
 		}
 
-		// HTML init
+		// =========================================================================================================================================
+		// ================================================================== INIT =================================================================
+		// == HTML init ====================================
+		// Description
 		$(".description p").fadeIn(function(){
-			$(this).text(ListSlide[1].desc); // As the slideshow's starts at 0, but the focus is on the position 1, so we display the description from ListSlide[1]
+			$(this).text(ListSlide[currentSlide].desc);
 		});
+		// Bulletpoints
 		$("img#" + currentSlide).css({"opacity": "0.9", "transition": "250ms ease-in"});
-
-		// CSS init
+		// Play/Pause div that will contain the play/pause button
 		$("#slideshow").append('<div id="playpause"></div>');
+		// == CSS init =====================================
+		// The slideshow's dimensions
 		$("#slideshow").css({"width": slideWidth, "height": slideHeight});
 		$(".slide img").css({"width": slideWidth});
 		$(".content").css({"width": slideWidth*slideCount, "left": -slideWidth});
+		// The slideshow's container width (The additional 140px are for the arrows on the sides)
 		$("#wrap").css({"width": slideWidth+140});
+		// The size of the play/pause button depends on the slideshow's dimensions (the height)
 		$("div#playpause").css({"height": playPauseHeight+"px", "width": playPauseHeight+"px", "top": playPausePosition+"px","background-size": "100%"});
 
 
+		// == Scripts init =================================
 		// Play the slideshow when the view is loaded
 		if(playOnLoading) {
 			slidePlay();
 		}
 
-		// ==============================================================================
-		// ==== EVENTS ==================================================================
-		// ==============================================================================
+		// =========================================================================================================================================
+		// =================================================================== EVENTS ==============================================================
+		// =========================================================================================================================================
 
+		// On click the next arrow
 		$("#next").click(function() {
 			if(isPlaying) {
 				clearInterval(intervalID);
 				intervalID = setInterval(function() { slideMove("next"); }, slideAnimDelay);
-			}
-			slideMove("next");
+			} else
+				slideMove("next");
 		});
 
+		// On click the previous arrow
 		$("#previous").click(function() {
 			if(isPlaying) {
 				clearInterval(intervalID);
 				intervalID = setInterval(function() { slideMove("prev"); }, slideAnimDelay);
-			}
-			slideMove("prev");
+			} else
+				slideMove("prev");
 		});
 
+		// On click the play/pause button
 		$("div#playpause").click(function() {
 			if(!isPlaying) {
 				slidePlay();
@@ -102,6 +117,7 @@ $(document).ready(function () {
 			playClicked = true;
 		});
 
+		// -- Manages the pause when hover the slideshow ------------
 		$("#wrap").mouseenter(function() {
 			if(isPlaying) {
 				slidePause();
@@ -113,20 +129,14 @@ $(document).ready(function () {
 				slidePlay();
 			}
 		});
+		// ----------------------------------------------------------
 
-		/*
-		$("body, section").hover(function() {
-			if(isPlaying && playClicked) {
-				slidePlay();
-			} else if(!isPlaying && playClicked) {
-				slidePause();
-			}
-		});
-		*/
-		// ==============================================================================
-		// ==== FUNCTIONS ===============================================================
-		// ==============================================================================
+		// =========================================================================================================================================
+		// =============================================================== FUNCTIONS ===============================================================
+		// =========================================================================================================================================
 
+		// -- Play/Pause the slideshow -------------------------------------------------------
+		// Depends on the slideMove(direction) and descUpdate(direction) function
 		function slidePlay() {
 			if(!isPlaying) {
 				intervalID = setInterval(function() { slideMove("next"); }, slideAnimDelay);
@@ -142,29 +152,37 @@ $(document).ready(function () {
 				$("div#playpause").css('background-image', 'url(' + playImg + ')');
 			}
 		};
+		// -----------------------------------------------------------------------------------
 
+		// -- Play/Pause the slideshow -------------------------------------------------------
+		// Depends on the slideMove(direction) and descUpdate(direction) function
+		// direction :	"next" (previous slide)
+		//				"previous" (next slide)
 		function slideMove(direction) {
-			/*
-			 1 -> previous slide
-			 -1 -> next slide
-			 */
 			if(direction == "next") {
+				// Inserts the first slide at the last position
+				// And scrolls the slides from the right to the left (margin-left: -slideWidth)
 				$("#slideshow .content").animate({"margin-left": -slideWidth}, slideAnimSpeed, function() {
 					$("#slideshow .content").css({marginLeft:0});
 					$("#slideshow .slide:last").after($("#slideshow .slide:first"));
 				});
 			} else if(direction == "prev") {
+				// Inserts the last slide at the first position
+				// And scrolls the slides from the left to the right (margin-left: slideWidth)
 				$("#slideshow .content").animate({"margin-left": slideWidth}, slideAnimSpeed, function() {
 					$("#slideshow .slide:first").before($("#slideshow .slide:last"));
 					$("#slideshow .content").css({marginLeft:0});
 				});
 			}
-			// Finally we update the description
+			// Finally we update the description of the slide
 			descUpdate(direction);
 		};
+		// -----------------------------------------------------------------------------------
 
 		function descUpdate(direction) {
 			$(".description p").fadeOut(function() {
+
+				// Updating the currentSlide flag
 				if(direction == "next") {
 					if(currentSlide < slideCount-1) {
 						currentSlide++;
@@ -178,7 +196,9 @@ $(document).ready(function () {
 						currentSlide = slideCount-1;
 					}
 				}
+				// Displays the new description
 				$(".description p").text(ListSlide[currentSlide].desc).fadeIn();
+				// Updating the bulletpoints indication of the currentSlide
 				$(".bulletpoints img").css({"opacity": "0.2", "transition": "250ms ease-out"});
 				$("img#" + currentSlide).css({"opacity": "0.9", "transition": "250ms ease-in"});
 			});
