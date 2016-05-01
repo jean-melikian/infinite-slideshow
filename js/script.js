@@ -23,6 +23,7 @@ $(document).ready(function () {
 	var isPlaying = false;	// This flag indicates if the slideshow is currently playing or not (default: false)
 	var playClicked = false;	// This flag indicates if the play/pause buttons have been clicked by the user (in order to rerun the slideshow on mouseover("#wrap"))
 	var intervalID;	// ID set by setInterval and used by clearInterval to manage delays between animations/translations
+	var currentDesc = 1; // Loops 0->n in order to display the matching description to the current slide, n being the number of slides
 	// ============================================================
 	
 	// == DATA FETCH ===============================================================================================================================
@@ -45,15 +46,23 @@ $(document).ready(function () {
 		$("#slideshow").html('<div class="content"></div>');
 		// Injects each of the resources fetched from above in HTML and CSS
 		for (key in ListSlide) {
-			$("#slideshow .content").append('<div class="slide" id="slideAtIndex'+ key +'"><div class="description"><p>'+ ListSlide[key].desc +'</p></div></div>');
+			$("#slideshow .content").append('<div class="slide" id="slideAtIndex'+ key +'"></div>');
 			$(".slide:eq("+ slideCount++ +")").css({"background": "url(" + ListSlide[key].src + ") center", "background-size": "cover", "height": slideHeight, "width": slideWidth});
 		}
+
+		// HTML init
+		$(".description p").fadeIn(function(){
+			$(this).text(ListSlide[1].desc); // As the slideshow's starts at 0, but the focus is on the position 1, so we display the description from ListSlide[1]
+		});
+
+		// CSS init
 		$("#slideshow").append('<div id="playpause"></div>');
 		$("#slideshow").css({"width": slideWidth, "height": slideHeight});
 		$(".slide img").css({"width": slideWidth});
 		$(".content").css({"width": slideWidth*slideCount, "left": -slideWidth});
 		$("#wrap").css({"width": slideWidth+140});
 		$("div#playpause").css({"height": playPauseHeight+"px", "width": playPauseHeight+"px", "top": playPausePosition+"px","background-size": "100%"});
+
 
 		// Play the slideshow when the view is loaded
 		if(playOnLoading) {
@@ -146,6 +155,27 @@ $(document).ready(function () {
 					$("#slideshow .content").css({marginLeft:0});
 				});
 			}
+			// Finally we update the description
+			descUpdate(direction);
+		};
+
+		function descUpdate(direction) {
+			$(".description p").fadeOut(function() {
+				if(direction == "next") {
+					if(currentDesc < slideCount-1) {
+						currentDesc++;
+					} else if(currentDesc >= slideCount-1) {
+						currentDesc = 0;
+					}
+				} else if(direction == "prev") {
+					if(currentDesc > 0) {
+						currentDesc--;
+					} else if(currentDesc <= 0) {
+						currentDesc = slideCount-1;
+					}
+				}
+				$(".description p").text(ListSlide[currentDesc].desc).fadeIn();
+			});
 		};
 	});
 });
