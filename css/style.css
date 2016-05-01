@@ -16,10 +16,11 @@ header h1, header h2 {
 
 a {
 	text-decoration: none;
+	transition: 250ms ease-out;
 	color: #FFF;
 } a:hover {
-	transition: 250ms ease-in;
-	color: #6BA3E8;
+	  transition: 250ms ease-in;
+	  color: #6BA3E8;
   }
 
 /* ------------------- SLIDESHOW ------------------- */
@@ -43,16 +44,16 @@ a {
 
 div#wrap {
 	margin: 0 auto;
-    padding: 0px 0px 70px 0px;
-    box-shadow: 0px 0px 15px 0px #656565;
+	padding: 0px 0px 0px 0px;
+	box-shadow: 0px 0px 15px 0px #656565;
 
 }
 
-div#wrap, div.description {
+div#wrap, div.description, div.bulletpoints, div.bulletpoints img {
 	background-image: url('../img/patterns/noise_lines.png');
 }
 
-div.description {
+div.description, div.bulletpoints-container {
 	height: 70px;
 	margin: 0;
 	padding: 0;
@@ -67,22 +68,40 @@ div.description p {
 	vertical-align: middle;
 }
 
+div.bulletpoints {
+	height: 100%;
+	line-height: 70px;
+	vertical-align: middle;
+	text-align: center;
+	margin: 0 auto;
+}
+
+div.bulletpoints img {
+	display: inline-block;
+	height: 24px;
+	width: auto;
+	margin: 0px 15px;
+	transition: 250ms ease-out;
+	opacity: 0.2;
+} div.bulletpoints img:hover {
+	  transition: 250ms ease-in;
+	  opacity: 0.9;
+	  cursor: pointer;
+  }
+
 #slideshow {
-    position: relative;
+	position: relative;
 	display: inline-block;
 	vertical-align: middle;
-
-    z-index: 100;
 }
 
 .slide img {
-	position: relative;
-	clip: rect(0px, 200px, 100px, 0px);
+
 }
 
 div#previous, div#next {
 	display: inline-block;
-    vertical-align: middle;
+	vertical-align: middle;
 	width: 64px;
 	height: 64px;
 }
@@ -104,12 +123,12 @@ div#next {
 }
 
 div#playpause {
-    position: relative;
-    margin-left: auto;
-    margin-right: auto;
+	position: relative;
+	margin-left: auto;
+	margin-right: auto;
 
 	background: url('../img/play.png') no-repeat center;
 	opacity: 0.1;
-    z-index: 9999;
+	z-index: 9999;
 }
 

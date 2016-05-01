@@ -1,6 +1,6 @@
 /*
-	Author : Jean-Christophe MELIKIAN
-*/
+ Author : Jean-Christophe MELIKIAN
+ */
 
 $(document).ready(function () {
 
@@ -9,9 +9,11 @@ $(document).ready(function () {
 	var slideHeight = 600;	// Sets the slideshow's height (px)
 	var slideAnimSpeed = 1000;	// Sets the slideshow'w translation speed in animate()(ms)
 	var slideAnimDelay = slideAnimSpeed+2000;	//	Sets the delay between each translation of the slides (ms)
-	var playImg = "img/play.png";	// Path to the play button image
-	var pauseImg = "img/pause.png";	// Path to the pause button image
 	var playOnLoading = true;	//	Tells the script whether the slideshow should be played on loading complete (true) or not (false) (default: true)
+	// Path to images
+	var playImg = "img/play.png";
+	var pauseImg = "img/pause.png";
+	var bulletpointImg = "img/bulletpoint.png";
 	// ------------------------------------------------------------
 
 	// ====== DO NOT TOUCH ========================================
@@ -23,7 +25,7 @@ $(document).ready(function () {
 	var isPlaying = false;	// This flag indicates if the slideshow is currently playing or not (default: false)
 	var playClicked = false;	// This flag indicates if the play/pause buttons have been clicked by the user (in order to rerun the slideshow on mouseover("#wrap"))
 	var intervalID;	// ID set by setInterval and used by clearInterval to manage delays between animations/translations
-	var currentDesc = 1; // Loops 0->n in order to display the matching description to the current slide, n being the number of slides
+	var currentSlide = 1; // Loops 0->n in order to display the matching description to the current slide, n being the number of slides
 	// ============================================================
 	
 	// == DATA FETCH ===============================================================================================================================
@@ -48,12 +50,14 @@ $(document).ready(function () {
 		for (key in ListSlide) {
 			$("#slideshow .content").append('<div class="slide" id="slideAtIndex'+ key +'"></div>');
 			$(".slide:eq("+ slideCount++ +")").css({"background": "url(" + ListSlide[key].src + ") center", "background-size": "cover", "height": slideHeight, "width": slideWidth});
+			$(".bulletpoints").append('<img src="'+ bulletpointImg +'" id="'+ key +'"/>');
 		}
 
 		// HTML init
 		$(".description p").fadeIn(function(){
 			$(this).text(ListSlide[1].desc); // As the slideshow's starts at 0, but the focus is on the position 1, so we display the description from ListSlide[1]
 		});
+		$("img#" + currentSlide).css({"opacity": "0.9", "transition": "250ms ease-in"});
 
 		// CSS init
 		$("#slideshow").append('<div id="playpause"></div>');
@@ -162,19 +166,21 @@ $(document).ready(function () {
 		function descUpdate(direction) {
 			$(".description p").fadeOut(function() {
 				if(direction == "next") {
-					if(currentDesc < slideCount-1) {
-						currentDesc++;
-					} else if(currentDesc >= slideCount-1) {
-						currentDesc = 0;
+					if(currentSlide < slideCount-1) {
+						currentSlide++;
+					} else if(currentSlide >= slideCount-1) {
+						currentSlide = 0;
 					}
 				} else if(direction == "prev") {
-					if(currentDesc > 0) {
-						currentDesc--;
-					} else if(currentDesc <= 0) {
-						currentDesc = slideCount-1;
+					if(currentSlide > 0) {
+						currentSlide--;
+					} else if(currentSlide <= 0) {
+						currentSlide = slideCount-1;
 					}
 				}
-				$(".description p").text(ListSlide[currentDesc].desc).fadeIn();
+				$(".description p").text(ListSlide[currentSlide].desc).fadeIn();
+				$(".bulletpoints img").css({"opacity": "0.2", "transition": "250ms ease-out"});
+				$("img#" + currentSlide).css({"opacity": "0.9", "transition": "250ms ease-in"});
 			});
 		};
 	});
