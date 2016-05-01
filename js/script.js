@@ -11,6 +11,7 @@ $(document).ready(function () {
 	var slideAnimDelay = slideAnimSpeed+2000;	//	Sets the delay between each translation of the slides (ms)
 	var playImg = "img/play.png";	// Path to the play button image
 	var pauseImg = "img/pause.png";	// Path to the pause button image
+	var bulletpointImg = "img/bulletpoint.png";
 	var playOnLoading = true;	//	Tells the script whether the slideshow should be played on loading complete (true) or not (false) (default: true)
 	// ------------------------------------------------------------
 
@@ -23,7 +24,7 @@ $(document).ready(function () {
 	var isPlaying = false;	// This flag indicates if the slideshow is currently playing or not (default: false)
 	var playClicked = false;	// This flag indicates if the play/pause buttons have been clicked by the user (in order to rerun the slideshow on mouseover("#wrap"))
 	var intervalID;	// ID set by setInterval and used by clearInterval to manage delays between animations/translations
-	var currentDesc = 1; // Loops 0->n in order to display the matching description to the current slide, n being the number of slides
+	var currentSlide = 1; // Loops 0->n in order to display the matching description to the current slide, n being the number of slides
 	// ============================================================
 	
 	// == DATA FETCH ===============================================================================================================================
@@ -48,6 +49,7 @@ $(document).ready(function () {
 		for (key in ListSlide) {
 			$("#slideshow .content").append('<div class="slide" id="slideAtIndex'+ key +'"></div>');
 			$(".slide:eq("+ slideCount++ +")").css({"background": "url(" + ListSlide[key].src + ") center", "background-size": "cover", "height": slideHeight, "width": slideWidth});
+			$(".bulletpoints").append('<img src="'+ bulletpointImg +'" id="'+ key +'"/>');
 		}
 
 		// HTML init
@@ -110,15 +112,25 @@ $(document).ready(function () {
 			}
 		});
 
-		/*
-		$("body, section").hover(function() {
-			if(isPlaying && playClicked) {
-				slidePlay();
-			} else if(!isPlaying && playClicked) {
-				slidePause();
+		$(".bulletpoints img").click(function() {
+			var selectedSlide = $(this).attr('id');
+			var jumpToOffset = selectedSlide - currentSlide;
+			alert(currentSlide + "\n" + jumpToOffset);
+			if(jumpToOffset != 0) {
+				$("#slideshow .content").animate({"margin-left": -slideWidth*jumpToOffset}, slideAnimSpeed, function() {
+					$("#slideshow .content").css({marginLeft:0});
+					$("#slideshow .slide:last").after($("#slideshow .slide:first"));
+				});
+				descUpdate("next");
+			} else {
+				$("#slideshow .content").animate({"margin-left": slideWidth*jumpToOffset}, slideAnimSpeed, function() {
+					$("#slideshow .content").css({marginLeft:0});
+					$("#slideshow .slide:last").after($("#slideshow .slide:first"));
+				});
+				descUpdate("previous");
 			}
+
 		});
-		*/
 		// ==============================================================================
 		// ==== FUNCTIONS ===============================================================
 		// ==============================================================================
@@ -162,19 +174,19 @@ $(document).ready(function () {
 		function descUpdate(direction) {
 			$(".description p").fadeOut(function() {
 				if(direction == "next") {
-					if(currentDesc < slideCount-1) {
-						currentDesc++;
-					} else if(currentDesc >= slideCount-1) {
-						currentDesc = 0;
+					if(currentSlide < slideCount-1) {
+						currentSlide++;
+					} else if(currentSlide >= slideCount-1) {
+						currentSlide = 0;
 					}
 				} else if(direction == "prev") {
-					if(currentDesc > 0) {
-						currentDesc--;
-					} else if(currentDesc <= 0) {
-						currentDesc = slideCount-1;
+					if(currentSlide > 0) {
+						currentSlide--;
+					} else if(currentSlide <= 0) {
+						currentSlide = slideCount-1;
 					}
 				}
-				$(".description p").text(ListSlide[currentDesc].desc).fadeIn();
+				$(".description p").text(ListSlide[currentSlide].desc).fadeIn();
 			});
 		};
 	});
